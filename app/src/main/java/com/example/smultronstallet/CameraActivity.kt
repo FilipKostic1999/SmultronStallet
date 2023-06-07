@@ -32,6 +32,8 @@ class CameraActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_review)
+
+
         val db = Firebase.firestore
         smultronPlats = DittsmultronPlace1
         recenssion = ReviewS
@@ -40,22 +42,17 @@ class CameraActivity : AppCompatActivity(){
 
 
 
+        // Removed useless comments
+        // Put the save to database code in a function for better structure and reusabilty
+
+
+
 
         ButtonSave.setOnClickListener {
-            var newSmultronPlace =
-                MapsPlace(name = smultronPlats.text.toString(), review = recenssion.text.toString())
-            db.collection("newSmultronPlace").add(newSmultronPlace)
-                .addOnSuccessListener { documentReference ->
-                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-                    finish()
-                }
-
+            savedToDb()
             }
 
-            //  cameraButtonSmultron.setOnClickListener{
-            //val intentCamerar = Intent(this, CameraActivity::class.java)
-            //startActivity(intentCamerar)
-            //}
+
 
             val takePicturesIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (takePicturesIntent.resolveActivity(this.packageManager) != null) {
@@ -68,21 +65,25 @@ class CameraActivity : AppCompatActivity(){
 
         }
 
-        /*  private fun getLocation() {
-          locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-          if ((ContextCompat.checkSelfPermission(
-                  this,
-                  Manifest.permission.ACCESS_FINE_LOCATION
-              ) != PackageManager.PERMISSION_GRANTED)
-          ) {
-              ActivityCompat.requestPermissions(
-                  this,
-                  arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                  locationPermissionCode
-              )
-          }
-          locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
-      }*/
+
+    fun savedToDb() {
+
+        val db = Firebase.firestore
+
+        var newSmultronPlace = MapsPlace(name = smultronPlats.text.toString(), review = recenssion.text.toString())
+
+        db.collection("newSmultronPlace").add(newSmultronPlace)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                finish()
+            }
+
+
+
+    }
+
+
+
 
 
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
